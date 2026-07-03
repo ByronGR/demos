@@ -34,6 +34,50 @@
 <body>
 <div id="root"></div>
 
+<!-- ── Demo access gate ──────────────────────────────────────────────────────
+     Client-side only: keeps casual visitors out of the sales demo. Because this
+     is a static site the credentials live in the page source, so this is a
+     deterrent, not real security. ─────────────────────────────────────────── -->
+<div id="nw-gate" style="position:fixed;inset:0;z-index:100000;background:#ECEAE3;display:flex;align-items:center;justify-content:center;font-family:'Poppins',-apple-system,sans-serif;padding:20px;">
+  <div style="width:360px;max-width:100%;background:#fff;border:1px solid #EBEBEB;border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.14);padding:34px 32px;box-sizing:border-box;">
+    <div style="display:flex;align-items:center;gap:11px;margin-bottom:22px;">
+      <div style="width:38px;height:38px;border-radius:10px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;position:relative;flex-shrink:0;">N<span style="position:absolute;bottom:7px;left:8px;right:14px;height:2px;background:#16A085;border-radius:1px;"></span></div>
+      <div style="line-height:1.1;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.03em;color:#111;">nearwork</div><div style="font-size:9.5px;font-weight:600;letter-spacing:.18em;color:#12866E;margin-top:2px;">CLIENT PORTAL</div></div>
+    </div>
+    <div style="font-size:18px;font-weight:700;color:#111;margin-bottom:4px;">Sign in</div>
+    <div style="font-size:12.5px;color:#757575;margin-bottom:20px;">Enter your credentials to view the portal.</div>
+    <form id="nw-gate-form">
+      <label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9E9E9E;margin-bottom:6px;">Email</label>
+      <input id="nw-gate-email" type="email" autocomplete="username" placeholder="you@nearwork.co" style="width:100%;box-sizing:border-box;font-size:14px;padding:11px 13px;border:1.5px solid #E5E4E0;border-radius:10px;outline:none;margin-bottom:16px;" />
+      <label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9E9E9E;margin-bottom:6px;">Password</label>
+      <input id="nw-gate-pass" type="password" autocomplete="current-password" placeholder="••••••••" style="width:100%;box-sizing:border-box;font-size:14px;padding:11px 13px;border:1.5px solid #E5E4E0;border-radius:10px;outline:none;margin-bottom:8px;" />
+      <div id="nw-gate-err" style="display:none;font-size:12px;color:#CC3666;margin-top:4px;">Incorrect email or password.</div>
+      <button type="submit" style="width:100%;margin-top:14px;background:#16A085;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;">Sign in</button>
+    </form>
+  </div>
+</div>
+<script>
+(function () {
+  var ALLOWED = ['byron.giraldo@nearwork.co', 'stephany.picos@nearwork.co'];
+  var PASS = 'Nearwork';
+  var KEY = 'nw_demo_auth';
+  var gate = document.getElementById('nw-gate');
+  function unlock() { gate.style.display = 'none'; }
+  if (sessionStorage.getItem(KEY) === '1') unlock();
+  document.getElementById('nw-gate-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = (document.getElementById('nw-gate-email').value || '').trim().toLowerCase();
+    var pass = document.getElementById('nw-gate-pass').value || '';
+    if (ALLOWED.indexOf(email) !== -1 && pass === PASS) {
+      try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+      unlock();
+    } else {
+      document.getElementById('nw-gate-err').style.display = 'block';
+    }
+  });
+})();
+</script>
+
 <script src="portal-data.js"></script>
 <script src="portal-candidate-data.js"></script>
 <script type="text/babel" src="primitives.jsx"></script>
