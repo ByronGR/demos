@@ -137,6 +137,19 @@ function PortalTopBar({ greeting, subtitle, dense = false, onNav }) {
   const [query, setQuery] = useState_p('');
   const notifs = (window.NW_ACTIVITY || []).slice(0, 5);
   const unread = 3;
+
+  // Live search across candidates + roles (mock data on window).
+  const q = query.trim().toLowerCase();
+  const searchResults = q.length >= 1 ? [
+    ...(window.NW_CANDIDATES || [])
+      .filter(c => [c.name, c.role, c.location, c.note].some(v => String(v || '').toLowerCase().includes(q)))
+      .slice(0, 6)
+      .map(c => ({ type: 'Candidate', id: c.id, label: c.name, sub: c.role, bg: c.avatarBg, initials: c.initials, route: 'candidate' })),
+    ...(window.NW_OPENINGS || [])
+      .filter(o => [o.title, o.team].some(v => String(v || '').toLowerCase().includes(q)))
+      .slice(0, 4)
+      .map(o => ({ type: 'Role', id: o.id, label: o.title, sub: o.team, route: 'kanban' })),
+  ] : [];
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -162,6 +175,27 @@ function PortalTopBar({ greeting, subtitle, dense = false, onNav }) {
           <button onClick={() => setQuery('')} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', cursor: 'pointer', padding: 2, display: 'flex' }}>
             <Icon name="x" size={14} color={NW.gray400} />
           </button>
+        )}
+        {q.length >= 1 && (
+          <>
+            <div onClick={() => setQuery('')} style={{ position: 'fixed', inset: 0, zIndex: 40 }} />
+            <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0, zIndex: 41, background: NW.white, border: `1px solid ${NW.gray100}`, borderRadius: 14, boxShadow: '0 18px 50px rgba(0,0,0,0.16)', overflow: 'hidden', maxHeight: 380, overflowY: 'auto' }}>
+              {searchResults.length ? searchResults.map((r, i) => (
+                <button key={r.type + '-' + r.id} onClick={() => { if (onNav) onNav(r.route, r.id); setQuery(''); }} style={{ display: 'flex', alignItems: 'center', gap: 11, width: '100%', border: 'none', borderTop: i ? `1px solid ${NW.gray100}` : 'none', background: NW.white, cursor: 'pointer', padding: '10px 14px', textAlign: 'left' }}>
+                  <span style={{ width: 30, height: 30, borderRadius: r.type === 'Candidate' ? '50%' : 8, background: r.bg || NW.gray500, color: NW.white, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+                    {r.initials || <Icon name="briefcase" size={14} color={NW.white} />}
+                  </span>
+                  <span style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ display: 'block', fontSize: 13, fontWeight: 600, color: NW.black, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.label}</span>
+                    {r.sub && <span style={{ display: 'block', fontSize: 11.5, color: NW.gray500 }}>{r.sub}</span>}
+                  </span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: NW.gray500, background: NW.gray50, borderRadius: 999, padding: '2px 8px', flexShrink: 0 }}>{r.type}</span>
+                </button>
+              )) : (
+                <div style={{ padding: '16px', fontSize: 13, color: NW.gray400 }}>No matches for “{query}”.</div>
+              )}
+            </div>
+          </>
         )}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, position: 'relative' }}>

@@ -166,8 +166,20 @@ function SettingsScreen({ density = 'regular', onNav }) {
                 </SettingsRow>
               </SettingsCard>
 
-              {/* Sign out */}
-              <button onClick={() => {}} style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 8, border: `1px solid ${NW.gray200}`, background: NW.white, borderRadius: 12, padding: '11px 18px', fontFamily: 'inherit', fontSize: 13.5, fontWeight: 600, color: NW.rose600, cursor: 'pointer' }}>
+              {/* Demo controls */}
+              <SettingsCard icon="rotate-ccw" title="Demo controls">
+                <SettingsRow title="Reset demo data" desc="Restore the demo to how it started — undoes any stage moves, notes, or layout tweaks made during this session." last>
+                  <Button variant="secondary" size="sm" icon="rotate-ccw" onClick={() => {
+                    if (window.confirm('Reset the demo to its original state? This clears any changes made during this session.')) {
+                      try { localStorage.clear(); } catch (e) {}
+                      window.location.reload();
+                    }
+                  }}>Reset demo</Button>
+                </SettingsRow>
+              </SettingsCard>
+
+              {/* Sign out — clears the demo login for this session */}
+              <button onClick={() => { try { sessionStorage.removeItem('nw_demo_auth'); } catch (e) {} window.location.reload(); }} style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 8, border: `1px solid ${NW.gray200}`, background: NW.white, borderRadius: 12, padding: '11px 18px', fontFamily: 'inherit', fontSize: 13.5, fontWeight: 600, color: NW.rose600, cursor: 'pointer' }}>
                 <Icon name="log-out" size={15} color={NW.rose600} /> Sign out
               </button>
             </div>
