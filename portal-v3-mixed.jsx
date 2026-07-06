@@ -168,6 +168,16 @@ function DashboardMixed({ populated = true, density = 'regular', onNav }) {
   const dense = density === 'compact';
   const [range, setRange] = useState_p('This week');
   const pad = dense ? 32 : 44;
+  // Live date + time-of-day greeting, and the signed-in person's first name.
+  const _now = new Date();
+  const _hr = _now.getHours();
+  const greetWord = _hr < 12 ? 'Good morning' : (_hr < 18 ? 'Good afternoon' : 'Good evening');
+  const dateLabel = _now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  let _demoEmail = '';
+  try { _demoEmail = (sessionStorage.getItem('nw_demo_email') || '').toLowerCase(); } catch (e) {}
+  const _nameMap = { 'byron.giraldo@nearwork.co': 'Byron', 'stephany.picos@nearwork.co': 'Stephany' };
+  const _cli = (window.NW_CLIENT && window.NW_CLIENT.user) ? window.NW_CLIENT.user : null;
+  const firstName = _nameMap[_demoEmail] || (_cli && _cli.name ? _cli.name.split(' ')[0] : 'there');
   const stats = populated ? window.NW_STATS_RANGE[range] : window.NW_STATS.empty;
   const candidates = populated ? window.NW_CANDIDATES : [];
   const queueItems = populated ? window.NW_CANDIDATES.filter(c => c.awaitingDays >= 1).sort((a, b) => b.awaitingDays - a.awaitingDays).slice(0, 6) : [];
@@ -185,11 +195,11 @@ function DashboardMixed({ populated = true, density = 'regular', onNav }) {
           {/* Hero */}
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: dense ? 28 : 38, gap: 24 }}>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: NW.gray500, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Friday, May 23</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: NW.gray500, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>{dateLabel}</div>
               <h1 style={{ fontSize: dense ? 36 : 46, fontWeight: 700, color: NW.black, letterSpacing: '-0.04em', lineHeight: 1.02, margin: 0, fontFamily: 'Poppins, sans-serif' }}>
                 {populated
-                  ? <>Good morning, Sarah.<br /><span style={{ color: NW.gray400 }}>You have </span><span style={{ color: NW.teal500 }}>{reviewN} candidates</span><span style={{ color: NW.gray400 }}> to review.</span></>
-                  : <>Welcome, Sarah.<br /><span style={{ color: NW.gray400 }}>Let's get your first role moving.</span></>}
+                  ? <>{greetWord}, {firstName}.<br /><span style={{ color: NW.gray400 }}>You have </span><span style={{ color: NW.teal500 }}>{reviewN} candidates</span><span style={{ color: NW.gray400 }}> to review.</span></>
+                  : <>Welcome, {firstName}.<br /><span style={{ color: NW.gray400 }}>Let's get your first role moving.</span></>}
               </h1>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 14 }}>
