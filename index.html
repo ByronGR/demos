@@ -70,7 +70,8 @@
     var pass = document.getElementById('nw-gate-pass').value || '';
     if (ALLOWED.indexOf(email) !== -1 && pass === PASS) {
       try { sessionStorage.setItem(KEY, '1'); sessionStorage.setItem('nw_demo_email', email); } catch (e) {}
-      unlock();
+      // Reload so the app renders with the signed-in name (it reads the email at load).
+      location.reload();
     } else {
       document.getElementById('nw-gate-err').style.display = 'block';
     }
