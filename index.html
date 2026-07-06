@@ -81,6 +81,22 @@
 
 <script src="portal-data.js"></script>
 <script src="portal-candidate-data.js"></script>
+<!-- Personalize the demo user to whoever signed in at the gate. -->
+<script>
+(function () {
+  try {
+    var e = (sessionStorage.getItem('nw_demo_email') || '').toLowerCase();
+    var M = {
+      'byron.giraldo@nearwork.co': { name: 'Byron Giraldo', initials: 'BG' },
+      'stephany.picos@nearwork.co': { name: 'Stephany Picos', initials: 'SP' }
+    };
+    if (M[e] && window.NW_CLIENT && window.NW_CLIENT.user) {
+      window.NW_CLIENT.user.name = M[e].name;
+      window.NW_CLIENT.user.initials = M[e].initials;
+    }
+  } catch (err) {}
+})();
+</script>
 <script type="text/babel" src="primitives.jsx"></script>
 <script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel" src="portal-shared.jsx"></script>
