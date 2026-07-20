@@ -460,6 +460,14 @@ function CandidateDetailScreen({ candidateId, density = 'regular', onNav }) {
   const discColor = a.completed ? ((window.NW_DISC_COLORS || {})[a.disc.type] || NW.gray500) : NW.gray500;
   const nextStage = NW_STAGE_ORDER[c.stageIdx]; // stageIdx is 1-based; this is the next label
   const canAdvance = c.stageIdx >= 1 && c.stageIdx < 5;
+  // Sourcing candidates get a stripped-down view: no assessment / DISC / competency —
+  // just what Nearwork actually provides for a sourced candidate.
+  const opening = (window.NW_OPENINGS || []).find(o => o.id === c.openingId);
+  const isSourcing = opening && opening.pipelineType === 'sourcing';
+  const work = c.work || [
+    { title: c.role, company: 'Confidential — SaaS company', period: '2023 — Present', points: ['Owned customer conversations across chat and email.', 'Consistently hit CSAT and first-response targets.'] },
+    { title: 'Customer Support Agent', company: 'BPO (US accounts)', period: '2021 — 2023', points: ['Handled US-based customer tickets end-to-end.', 'Trained two new agents on tooling and tone.'] },
+  ];
   const goBack = () => onNav && onNav('kanban', c.openingId);
   const scrollNotes = () => document.getElementById('nw-cand-notes')?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
 
@@ -517,7 +525,48 @@ function CandidateDetailScreen({ candidateId, density = 'regular', onNav }) {
               </div>
             </div>
 
-            {!a.completed ? (
+            {isSourcing ? (
+              // Sourcing view — only what we can actually provide (no assessment/DISC/etc).
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 12, color: NW.gray500, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="user-check" size={13} color={NW.gray400} /> Sourced &amp; screened by Nearwork</span>
+                  <span style={{ width: 3, height: 3, borderRadius: '50%', background: NW.gray300 }} />
+                  <span style={{ fontSize: 12, color: NW.gray500 }}>You run the interviews, assessment and hiring from here.</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: dense ? '1fr' : '1.55fr 1fr', gap: 20, alignItems: 'start' }}>
+                  {/* Left — experience + skills + notes */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    <CardPanel title="Work experience" icon="briefcase">
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        {work.map((w, i) => (
+                          <div key={i} style={{ display: 'flex', gap: 13 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: NW.teal500, marginTop: 6, flexShrink: 0 }} />
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontSize: 13.5, fontWeight: 600, color: NW.black }}>{w.title}</div>
+                              <div style={{ fontSize: 12.5, color: NW.gray500, marginTop: 1 }}>{w.company} · {w.period}</div>
+                              <ul style={{ margin: '7px 0 0', paddingLeft: 16 }}>
+                                {w.points.map((p, j) => <li key={j} style={{ fontSize: 12.5, color: NW.gray700, lineHeight: 1.5, marginBottom: 2 }}>{p}</li>)}
+                              </ul>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardPanel>
+                    <SkillsMatchPanel c={c} />
+                    <NotesPanel c={c} />
+                  </div>
+                  {/* Right rail — snapshot + english + resume */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    <SnapshotPanel c={c} x={x} />
+                    <EnglishPanel eng={a.english} />
+                    <CardPanel title="Resume" icon="file-text">
+                      <p style={{ fontSize: 12.5, color: NW.gray500, margin: '0 0 12px', lineHeight: 1.5 }}>The candidate&rsquo;s full CV, as submitted to Nearwork.</p>
+                      <Button variant="secondary" size="sm" icon="download" onClick={() => {}}>View resume (PDF)</Button>
+                    </CardPanel>
+                  </div>
+                </div>
+              </>
+            ) : !a.completed ? (
               <AssessmentPending c={c} />
             ) : (
               <>
