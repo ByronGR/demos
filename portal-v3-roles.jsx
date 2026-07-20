@@ -56,17 +56,24 @@ function RoleCard({ opening, candidates, dense, onOpen }) {
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: active ? NW.teal500 : NW.gray400 }} />
             {active ? 'Active' : 'Draft'}
           </span>
-          {opening.pipelineType === 'sourcing' && (
-            <span title="Sourcing only — Nearwork sources & screens; you run the interviews and hiring" style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: 11, fontWeight: 700, letterSpacing: '0.04em',
-              padding: '5px 11px', borderRadius: 999,
-              background: '#EDE7F6', color: '#6B4FA8', border: '1px solid #6B4FA833',
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6B4FA8' }} />
-              Sourcing
-            </span>
-          )}
+          {(() => {
+            const sourcing = opening.pipelineType === 'sourcing';
+            const bg = sourcing ? '#EDE7F6' : NW.teal50;
+            const fg = sourcing ? '#6B4FA8' : NW.teal700;
+            return (
+              <span title={sourcing
+                ? 'Sourcing only — Nearwork sources & screens; you run the interviews and hiring'
+                : 'Full pipeline — Nearwork runs sourcing, screening, interviews and assessment'} style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.04em',
+                padding: '5px 11px', borderRadius: 999,
+                background: bg, color: fg, border: `1px solid ${fg}33`,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: fg }} />
+                {sourcing ? 'Sourcing' : 'Full pipeline'}
+              </span>
+            );
+          })()}
         </span>
         <span style={{ fontSize: 12, color: NW.gray400, fontWeight: 500 }}>{opening.daysOpen}d open</span>
       </div>
