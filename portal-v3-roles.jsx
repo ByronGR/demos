@@ -44,16 +44,29 @@ function RoleCard({ opening, candidates, dense, onOpen }) {
       }}>
       {/* Top: status + days */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 7,
-          fontSize: 11, fontWeight: 600, letterSpacing: '0.04em',
-          padding: '5px 11px', borderRadius: 999,
-          background: active ? NW.teal50 : NW.gray50,
-          color: active ? NW.teal700 : NW.gray500,
-          border: `1px solid ${active ? '#16A08522' : NW.gray100}`,
-        }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: active ? NW.teal500 : NW.gray400 }} />
-          {active ? 'Active' : 'Sourcing'}
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 7,
+            fontSize: 11, fontWeight: 600, letterSpacing: '0.04em',
+            padding: '5px 11px', borderRadius: 999,
+            background: active ? NW.teal50 : NW.gray50,
+            color: active ? NW.teal700 : NW.gray500,
+            border: `1px solid ${active ? '#16A08522' : NW.gray100}`,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: active ? NW.teal500 : NW.gray400 }} />
+            {active ? 'Active' : 'Draft'}
+          </span>
+          {opening.pipelineType === 'sourcing' && (
+            <span title="Sourcing only — Nearwork sources & screens; you run the interviews and hiring" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              fontSize: 11, fontWeight: 700, letterSpacing: '0.04em',
+              padding: '5px 11px', borderRadius: 999,
+              background: '#EDE7F6', color: '#6B4FA8', border: '1px solid #6B4FA833',
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6B4FA8' }} />
+              Sourcing
+            </span>
+          )}
         </span>
         <span style={{ fontSize: 12, color: NW.gray400, fontWeight: 500 }}>{opening.daysOpen}d open</span>
       </div>

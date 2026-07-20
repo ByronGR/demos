@@ -27,6 +27,12 @@ window.NW_CANDIDATES = [
   { id: 15, name: 'Óscar Patiño',    initials: 'OP', role: 'Product Designer',      location: 'Medellín',     score: 64, stage: 'Not selected', stageIdx: 6, openingId: 'pd-1', awaitingDays: 0, submittedDays: 10, avatarBg: '#94A3B8', match: ['Figma','UI'], note: 'Screened out — strong UI but limited research experience.' },
   { id: 16, name: 'Natalia Ríos',    initials: 'NR', role: 'DevOps Engineer',       location: 'Cali',         score: 60, stage: 'Not selected', stageIdx: 6, openingId: 'do-1', awaitingDays: 0, submittedDays: 8,  avatarBg: '#94A3B8', match: ['Azure','Bash'], note: 'Screened out — limited Kubernetes depth for this role.' },
   { id: 17, name: 'Iván Castaño',    initials: 'IC', role: 'Backend Engineer',      location: 'Remote',       score: 66, stage: 'Not selected', stageIdx: 6, openingId: 'be-2', awaitingDays: 0, submittedDays: 6,  avatarBg: '#94A3B8', match: ['Python'], note: 'Screened out — declined the salary band.' },
+  // Sourcing role (src-1) — Nearwork sources & screens; the client moves them from Submitted onward.
+  { id: 18, name: 'Daniela Suárez', initials: 'DS', role: 'Customer Support Specialist', location: 'Medellín',    score: 90, stage: 'Submitted',   stageIdx: 3, openingId: 'src-1', awaitingDays: 1, submittedDays: 2, avatarBg: '#16A085', match: ['C1 English','Zendesk','Chat support'], note: 'Sourced & screened by Nearwork — submitted to your team.' },
+  { id: 19, name: 'Julián Ramírez', initials: 'JR', role: 'Customer Support Specialist', location: 'Bogotá',      score: 87, stage: 'In progress', stageIdx: 4, openingId: 'src-1', awaitingDays: 0, submittedDays: 3, avatarBg: '#3B82F6', match: ['C1 English','SaaS','Email support'], note: 'Your team started their interview process.' },
+  { id: 20, name: 'Paola Guerrero', initials: 'PG', role: 'Customer Support Specialist', location: 'Cali',        score: 85, stage: 'Submitted',   stageIdx: 3, openingId: 'src-1', awaitingDays: 2, submittedDays: 1, avatarBg: '#EAB308', match: ['C1 English','Zendesk'], note: 'Sourced & screened — awaiting your review.' },
+  { id: 21, name: 'Sebastián Nieto',initials: 'SN', role: 'Customer Support Specialist', location: 'Remote',      score: 82, stage: 'Screening',   stageIdx: 2, openingId: 'src-1', awaitingDays: 0, submittedDays: 0, avatarBg: '#AF7AC5', match: ['B2 English','Support'], note: 'Nearwork screening in progress.' },
+  { id: 22, name: 'Laura Bernal',   initials: 'LB', role: 'Customer Support Specialist', location: 'Barranquilla',score: 88, stage: 'Sourced',     stageIdx: 1, openingId: 'src-1', awaitingDays: 0, submittedDays: 0, avatarBg: '#12866E', match: ['C1 English','Chat'], note: 'Just sourced by Nearwork.' },
 ];
 
 // Comparison profile per candidate (experience, English, DISC, etc.).
@@ -73,6 +79,12 @@ window.NW_OPENINGS = [
       summary: 'A backend engineer for the data platform pod — building services and pipelines that power analytics and reporting.',
       responsibilities: ['Build backend services for the data platform.', 'Support ingestion and transformation pipelines.', 'Write well-tested, maintainable code.', 'Collaborate with analytics on data needs.'],
       mustHave: ['Python', 'SQL', 'Docker', 'REST APIs'], niceToHave: ['dbt', 'Airflow', 'AWS'] } },
+  // Sourcing-only role — Nearwork sources & screens; the client runs their own process.
+  { id: 'src-1', title: 'Customer Support Specialist', team: 'Support', location: 'Remote', inPipeline: 5, needsReview: 0, daysOpen: 4, status: 'active', pipelineType: 'sourcing',
+    brief: { approvedDate: 'Jul 1, 2026', sentBy: { name: 'Dani Ospina', initials: 'DO', avatarBg: '#0F0F0F', role: 'Account manager · Nearwork' }, seniority: 'Mid', engagement: 'Full-time', comp: '$2,200 – $3,000 / mo', headcount: 2, timezone: 'GMT-5 ± 3h overlap', startTarget: 'Aug 2026',
+      summary: 'Sourcing only — Nearwork sources and screens English-fluent support specialists, then submits them to your team. You run the interviews, assessment and hiring from here.',
+      responsibilities: ['Respond to customer tickets with empathy and clarity.', 'Own resolution end-to-end across chat and email.', 'Escalate and document edge cases.', 'Hit CSAT and response-time targets.'],
+      mustHave: ['C1 English', 'Customer support', 'Zendesk', 'Written communication'], niceToHave: ['SaaS', 'Spanish', 'QA'] } },
 ];
 
 // Activity / updates feed

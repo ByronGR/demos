@@ -255,7 +255,17 @@ function PipelineScreen({ populated = true, density = 'regular', onNav, openingI
   const activeRole = openingId || 'all';
   const [view, setView] = useState_p('kanban');
   const candidates = activeRole === 'all' ? allCandidates : allCandidates.filter(c => c.openingId === activeRole);
-  const stages = [
+  const activeOpening = (window.NW_OPENINGS || []).find(o => o.id === activeRole);
+  const isSourcing = activeOpening && activeOpening.pipelineType === 'sourcing';
+  const stages = isSourcing ? [
+    // Sourcing: Nearwork owns Sourced/Screening; the client moves from Submitted on.
+    { key: 'Sourced',     idx: 1, color: NW.gray300 },
+    { key: 'Screening',   idx: 2, color: NW.violet500 },
+    { key: 'Submitted',   idx: 3, color: NW.teal500 },
+    { key: 'In progress', idx: 4, color: NW.teal600 },
+    { key: 'Hired',       idx: 5, color: NW.green600 || '#16A085' },
+    { key: 'Not selected',idx: 6, color: '#94A3B8' },
+  ] : [
     { key: 'Applied',     idx: 1, color: NW.gray300 },
     { key: 'Screening',   idx: 2, color: NW.violet500 },
     { key: 'Technical',   idx: 3, color: NW.teal500 },
@@ -265,7 +275,7 @@ function PipelineScreen({ populated = true, density = 'regular', onNav, openingI
   ];
   const roleLabels = {
     'all': 'All roles', 'be-1': 'Senior Backend Engineer', 'pd-1': 'Product Designer',
-    'do-1': 'DevOps Engineer', 'be-2': 'Backend Engineer',
+    'do-1': 'DevOps Engineer', 'be-2': 'Backend Engineer', 'src-1': 'Customer Support Specialist',
   };
   const activeRoleLabel = roleLabels[activeRole];
   const stageOf = (c) => stages.find(s => s.idx === c.stageIdx);
