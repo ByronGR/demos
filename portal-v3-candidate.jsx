@@ -449,6 +449,7 @@ function CandidateDetailScreen({ candidateId, density = 'regular', onNav }) {
   const cands = window.NW_CANDIDATES || [];
   const c = cands.find(x => x.id === candidateId) || cands[0];
   const [advanced, setAdvanced] = useState_p(false);
+  const [srcMoved, setSrcMoved] = useState_p(null);
   if (!c) return null;
   const a = window.getCandidateAssessment(c);
   const x = window.getCandidateCompare ? window.getCandidateCompare(c) : {};
@@ -516,12 +517,34 @@ function CandidateDetailScreen({ candidateId, density = 'regular', onNav }) {
               </div>
               {/* Action bar */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 20, paddingTop: 18, borderTop: `1px solid ${NW.gray100}`, flexWrap: 'wrap' }}>
-                {canAdvance && !advanced && <Button variant="primary" size="sm" icon="arrow-right" onClick={() => setAdvanced(true)}>Advance to {nextStage}</Button>}
-                {advanced && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 600, color: NW.teal700, background: NW.teal50, padding: '8px 14px', borderRadius: 999 }}><Icon name="check" size={14} color={NW.teal600} strokeWidth={2.5} /> Moved to {nextStage} — Nearwork notified</span>}
-                <Button variant="secondary" size="sm" icon="message-square-text" onClick={scrollNotes}>Add note</Button>
-                <Button variant="secondary" size="sm" icon="calendar-plus" onClick={scrollNotes}>Request interview</Button>
-                <span style={{ flex: 1 }} />
-                <Button variant="ghost" size="sm" icon="columns-3" onClick={() => onNav && onNav('kanban', c.openingId)}>Compare</Button>
+                {isSourcing ? (
+                  // Sourcing: the client only decides on candidates Nearwork has submitted.
+                  <>
+                    {srcMoved ? (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 600, color: NW.teal700, background: NW.teal50, padding: '8px 14px', borderRadius: 999 }}><Icon name="check" size={14} color={NW.teal600} strokeWidth={2.5} /> {srcMoved} — Nearwork notified</span>
+                    ) : c.stageIdx <= 2 ? (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 500, color: NW.gray500, background: NW.gray50, padding: '8px 14px', borderRadius: 999 }}><Icon name="clock" size={14} color={NW.gray400} /> Nearwork is sourcing &amp; screening — you&rsquo;ll review once submitted.</span>
+                    ) : (
+                      <>
+                        {c.stageIdx === 3 && <Button variant="primary" size="sm" icon="arrow-right" onClick={() => setSrcMoved('Moved to In progress')}>Move to In progress</Button>}
+                        <Button variant="secondary" size="sm" icon="check" onClick={() => setSrcMoved('Marked as Hired')}>Mark hired</Button>
+                        <Button variant="ghost" size="sm" icon="x" onClick={() => setSrcMoved('Marked as Not selected')}>Not selected</Button>
+                      </>
+                    )}
+                    <Button variant="secondary" size="sm" icon="message-square-text" onClick={scrollNotes}>Add note</Button>
+                    <span style={{ flex: 1 }} />
+                    <Button variant="ghost" size="sm" icon="columns-3" onClick={() => onNav && onNav('kanban', c.openingId)}>Compare</Button>
+                  </>
+                ) : (
+                  <>
+                    {canAdvance && !advanced && <Button variant="primary" size="sm" icon="arrow-right" onClick={() => setAdvanced(true)}>Advance to {nextStage}</Button>}
+                    {advanced && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 600, color: NW.teal700, background: NW.teal50, padding: '8px 14px', borderRadius: 999 }}><Icon name="check" size={14} color={NW.teal600} strokeWidth={2.5} /> Moved to {nextStage} — Nearwork notified</span>}
+                    <Button variant="secondary" size="sm" icon="message-square-text" onClick={scrollNotes}>Add note</Button>
+                    <Button variant="secondary" size="sm" icon="calendar-plus" onClick={scrollNotes}>Request interview</Button>
+                    <span style={{ flex: 1 }} />
+                    <Button variant="ghost" size="sm" icon="columns-3" onClick={() => onNav && onNav('kanban', c.openingId)}>Compare</Button>
+                  </>
+                )}
               </div>
             </div>
 
@@ -552,7 +575,6 @@ function CandidateDetailScreen({ candidateId, density = 'regular', onNav }) {
                         ))}
                       </div>
                     </CardPanel>
-                    <SkillsMatchPanel c={c} />
                     <NotesPanel c={c} />
                   </div>
                   {/* Right rail — snapshot + english + resume */}

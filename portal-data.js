@@ -50,6 +50,12 @@ window.NW_CANDIDATE_EXTRA = {
   10: { experience: 7, english: { level: 'C1', score: 89 }, disc: { type: 'D', label: 'Driver' },       salaryExp: '$6,000', availability: '3 weeks', timezone: 'GMT-5' },
   11: { experience: 6, english: { level: 'C1', score: 91 }, disc: { type: 'I', label: 'Influencer' },   salaryExp: '$5,300', availability: '2 weeks', timezone: 'GMT-5' },
   12: { experience: 3, english: { level: 'B1', score: 70 }, disc: { type: 'S', label: 'Steady' },       salaryExp: '$3,800', availability: 'Immediate', timezone: 'GMT-5' },
+  // Sourcing candidates (opening src-1) — real, providable data only (no DISC/assessment shown for sourcing)
+  18: { experience: 5, english: { level: 'C1', score: 91 }, disc: { type: 'C', label: 'Conscientious' },salaryExp: '$2,600', availability: '2 weeks',   timezone: 'GMT-5 (COT)' },
+  19: { experience: 6, english: { level: 'C1', score: 89 }, disc: { type: 'D', label: 'Driver' },       salaryExp: '$2,800', availability: '3 weeks',   timezone: 'GMT-5 (COT)' },
+  20: { experience: 4, english: { level: 'C1', score: 88 }, disc: { type: 'S', label: 'Steady' },       salaryExp: '$2,400', availability: 'Immediate', timezone: 'GMT-5 (COT)' },
+  21: { experience: 3, english: { level: 'B2', score: 82 }, disc: { type: 'I', label: 'Influencer' },   salaryExp: '$2,200', availability: '1 month',   timezone: 'GMT-5 (COT)' },
+  22: { experience: 5, english: { level: 'C1', score: 90 }, disc: { type: 'C', label: 'Conscientious' },salaryExp: '$2,500', availability: '2 weeks',   timezone: 'GMT-5 (COT)' },
 };
 window.NW_DISC_COLORS = { D: '#E74C7C', I: '#EAB308', S: '#16A085', C: '#3B82F6' };
 window.getCandidateCompare = function (c) {
