@@ -378,11 +378,16 @@ function NotesPanel({ c }) {
   const seed = c.note ? [{ author: 'Lina Pardo · Nearwork', date: 'Recruiter note', text: c.note, recruiter: true }] : [];
   const [notes, setNotes] = useState_p(() => { try { const s = JSON.parse(localStorage.getItem(key)); if (Array.isArray(s)) return s.concat(seed); } catch (e) {} return seed; });
   const [draft, setDraft] = useState_p('');
+  // The real portal writes candidateNotes with a scope of client_visible or
+  // client_internal. The demo is what prospects are shown, so it has to make the
+  // same promise: a client can keep a note to their own team, and Nearwork
+  // genuinely cannot see it.
+  const [scope, setScope] = useState_p('client_visible');
   const user = (window.NW_CLIENT && window.NW_CLIENT.user) || { name: 'You', initials: 'YO' };
   const add = () => {
     if (!draft.trim()) return;
     const mine = notes.filter(n => !n.recruiter);
-    const next = [{ author: user.name, date: 'Just now', text: draft.trim() }, ...mine];
+    const next = [{ author: user.name, date: 'Just now', text: draft.trim(), scope }, ...mine];
     setNotes(next.concat(seed));
     try { localStorage.setItem(key, JSON.stringify(next)); } catch (e) {}
     setDraft('');
@@ -394,8 +399,27 @@ function NotesPanel({ c }) {
         <div style={{ flex: 1 }}>
           <textarea value={draft} onChange={e => setDraft(e.target.value)} placeholder={`Add a note about ${c.name.split(' ')[0]}…`}
             style={{ width: '100%', minHeight: 58, resize: 'vertical', boxSizing: 'border-box', border: `1px solid ${NW.gray200}`, borderRadius: 11, padding: '10px 12px', fontFamily: 'inherit', fontSize: 13, color: NW.black, lineHeight: 1.5, outline: 'none', background: NW.offWhite }} />
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 9 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 9, gap: 10, flexWrap: 'wrap' }}>
+            <div style={{ display: 'inline-flex', background: NW.gray50, border: `1px solid ${NW.gray200}`, borderRadius: 9, padding: 2 }}>
+              {[['client_visible', 'Shared with Nearwork', 'users'], ['client_internal', 'My team only', 'lock']].map(([val, label, ico]) => (
+                <button key={val} onClick={() => setScope(val)} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5, border: 'none', cursor: 'pointer',
+                  font: 'inherit', fontSize: 11.5, fontWeight: 600, borderRadius: 7, padding: '5px 10px',
+                  background: scope === val ? NW.white : 'transparent',
+                  color: scope === val ? (val === 'client_visible' ? NW.teal700 : NW.gray800) : NW.gray500,
+                  boxShadow: scope === val ? '0 1px 2px rgba(0,0,0,.08)' : 'none',
+                }}>
+                  <Icon name={ico} size={12} color={scope === val ? (val === 'client_visible' ? NW.teal600 : NW.gray700) : NW.gray400} />
+                  {label}
+                </button>
+              ))}
+            </div>
             <Button variant="primary" size="sm" icon="send" disabled={!draft.trim()} onClick={add}>Post note</Button>
+          </div>
+          <div style={{ fontSize: 10.5, color: NW.gray400, marginTop: 6 }}>
+            {scope === 'client_visible'
+              ? 'Visible to your team and the Nearwork team.'
+              : 'Visible only to your team — the Nearwork team can’t see this.'}
           </div>
         </div>
       </div>
@@ -407,6 +431,7 @@ function NotesPanel({ c }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 12.5, fontWeight: 600, color: NW.black }}>{n.author}</span>
                 <span style={{ fontSize: 10.5, color: NW.gray400 }}>{n.date}</span>
+                {n.scope === 'client_internal' && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 9.5, fontWeight: 700, color: NW.gray700, background: NW.gray100, padding: '2px 7px', borderRadius: 999, letterSpacing: '.04em', textTransform: 'uppercase' }}><Icon name="lock" size={9} color={NW.gray600} />My team only</span>}
                 {n.recruiter && <span style={{ fontSize: 9.5, fontWeight: 700, color: NW.teal700, background: NW.teal50, padding: '2px 7px', borderRadius: 999, letterSpacing: '0.04em', textTransform: 'uppercase' }}>From Nearwork</span>}
               </div>
               <p style={{ fontSize: 13, color: NW.gray700, lineHeight: 1.55, margin: 0 }}>{n.text}</p>
